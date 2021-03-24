@@ -1,0 +1,138 @@
+@import "main";
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.item {
+  position: relative;
+  background: $main-color;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    background: inherit;
+    opacity: 0.9;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(2) translateX(-75%) translateY(-75%) rotate(-28deg);
+    transition: transform 3s cubic-bezier(0.2, 1, 0.3, 1);
+    // cubic-bezier is transition-timing function like ease, ease-in...
+  }
+
+  /* NOTE:  The ::before and ::after pseudo-elements in CSS allows you to insert content onto a page without it needing to be in the HTML. ::before and ::after have some content, incase it is empty, there is usually some other content like overlay or other user defined styles etc.
+  While :hover is a pseudo-class. Using ::after/before with :hover will bring in ::after/before (content) when the selected element is hovered...    */
+
+  // Bring in main color overlay
+  &:hover::after {
+    transform: scale(2) translateX(0) translateY(0) rotate(-28deg);
+  }
+
+  // Scale the image on hover
+  &:hover &-image {
+    transform: scale(1.2);
+  }
+
+  // Bring in text on hover
+  &:hover &-text {
+    opacity: 1;
+    // making it visible
+    transform: translateY(0);
+    // default resting position, brings the entire div down..
+  }
+
+  // item-image div
+  &-image {
+    height: auto;
+    // height of image div
+    transform: translateZ(0);
+    // this changes in hover
+    display: block;
+    transition: transform 750ms cubic-bezier(0.2, 1, 0.3, 1);
+    // background: $main-color; inherited from .item
+  }
+
+  // Creates a custom style
+  &-image:before {
+    content: "";
+    display: block;
+    padding-top: 75%;
+    // 75% of the width parent element(ie, .item)
+    // Creates padding top for &-image
+    overflow: hidden;
+  }
+
+  &-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    // Placing the image on top of the padding created by &-image:before..
+    // Positioning it absolute removes it from the main flow of the document..
+    // ie the image occupies the space created by &-image:before
+    width: 100%;
+    height: auto;
+    // So that it will adapt to the height of the padding-top ....
+    line-height: 0;
+  }
+
+  // Upto this point, the image still comes out on hover
+
+  &-text {
+    position: absolute;
+    // taking .item-text out of the main flow
+    // making .item-text absolute is also limiting the image within the .item-image::before
+    // Since .item-text is positioned absoulte, it will not allow .item-image to expand further...
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    // with respect to .item
+    // opacity: 1;
+    opacity: 0;
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+    transform: translateY(-20%);
+    // Rising entire div 20% higher from the original position, ie 0. Hence this is the default position..
+    transition: opacity 500ms cubic-bezier(0.2, 1, 0.3, 1),
+      transform 500ms cubic-bezier(0.2, 1, 0.3, 1);
+    transition-delay: 300ms;
+  }
+
+  /* NOTE: Why 2 divs around the text?
+  Maybe due to misc styling issues...
+  or for aligning to the center properly...  */
+
+  &-text-wrap {
+    position: absolute;
+    // relative to .item-text
+    width: 100%;
+    top: 50%;
+    // 50% of .item-text, making the text at the center of the image
+    transform: translateY(-50%);
+    // 50% of the height of .item-text-wrap
+  }
+
+  &-text-title {
+    font-size: 2rem;
+    padding: 0 1rem;
+    margin-top: 5px;
+  }
+
+  &-text-category {
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    opacity: 0.9rem;
+    margin: 0;
+  }
+  /*
+  */
+}
+
+@import "item_media";
